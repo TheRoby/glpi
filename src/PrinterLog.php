@@ -182,12 +182,17 @@ class PrinterLog extends CommonDBChild
 
             foreach ($metrics as $key => $value) {
                 $label = $this->getLabelFor($key);
-                if ($label && $value > 0) {
+                if ($label && array_sum($metrics) > 0) {
                     $series[$key]['name'] = $label;
                     $series[$key]['data'][] = $value;
                 }
             }
         }
+		foreach ($series as $key => $value) {
+			if (array_sum($value['data']) == 0) {
+				unset($series[$key]);
+			}
+		}        
 
         $bar_conf = [
             'data'  => [
